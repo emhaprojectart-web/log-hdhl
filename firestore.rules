@@ -1,0 +1,67 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    // Dialysis sessions collection (asuhan pasien hemodialisa perawat pelaksana & PJ shift)
+    match /dialysis_sessions/{sessionId} {
+      allow read: if true;
+      allow write: if isValidId(sessionId);
+    }
+
+    // Shift reports and operational SBAR
+    match /shift_reports/{reportId} {
+      allow read: if true;
+      allow write: if isValidId(reportId);
+    }
+
+    // Master data: Patients
+    match /master_patients/{patientId} {
+      allow read: if true;
+      allow write: if isValidId(patientId);
+    }
+
+    // Master data: Nurses
+    match /master_nurses/{nurseId} {
+      allow read: if true;
+      allow write: if isValidId(nurseId);
+    }
+
+    // Master data: Beds & Machines
+    match /master_beds/{bedId} {
+      allow read: if true;
+      allow write: if isValidId(bedId);
+    }
+
+    // Individual nurse logbook state (patients managed, checklist statuses, TTV clinical data)
+    match /nurse_logbooks/{nurseKey} {
+      allow read: if true;
+      allow write: if isValidId(nurseKey);
+    }
+
+    // Live verification registry for PJ Shift & KaRu
+    match /verification_registry/{regId} {
+      allow read: if true;
+      allow write: if isValidId(regId);
+    }
+
+    // Connection testing doc
+    match /test/{docId} {
+      allow read, write: if true;
+    }
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "entities": {
+    "DialysisSession": {
+      "title": "DialysisSession",
+      "description": "Data sesi dan logbook tindakan asuhan hemodialisa pasien",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "bedNumber": { "type": "string" },
+        "patientName": { "type": "string" },
+        "medicalRecordNumber": { "type": "string" },
+        "nurseInCharge": { "type": "string" },
+        "shift": { "type": "string" },
+        "sessionStatus": { "type": "string" },
+        "verificationStatus": { "type": "string" },
+        "targetUf": { "type": "number" },
+        "achievedUf": { "type": "number" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "bedNumber", "patientName", "nurseInCharge"]
+    },
+    "ShiftReport": {
+      "title": "ShiftReport",
+      "description": "Laporan harian shift, sensus pasien, dan SBAR unit hemodialisa",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "date": { "type": "string" },
+        "shift": { "type": "string" },
+        "pjShift": { "type": "string" },
+        "kepalaRuangan": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "date", "shift"]
+    },
+    "MasterPatient": {
+      "title": "MasterPatient",
+      "description": "Data master pasien hemodialisa terjadwal",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "patientName": { "type": "string" },
+        "medicalRecordNumber": { "type": "string" },
+        "schedule": { "type": "string" }
+      },
+      "required": ["id", "patientName"]
+    },
+    "MasterNurse": {
+      "title": "MasterNurse",
+      "description": "Data master tenaga perawat unit hemodialisa",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "role": { "type": "string" },
+        "nip": { "type": "string" }
+      },
+      "required": ["id", "name"]
+    }
+  },
+  "firestore": {
+    "/dialysis_sessions/{sessionId}": {
+      "schema": { "$ref": "#/entities/DialysisSession" },
+      "description": "Sesi hemodialisa dan logbook asuhan perawat pelaksana"
+    },
+    "/shift_reports/{reportId}": {
+      "schema": { "$ref": "#/entities/ShiftReport" },
+      "description": "Laporan shift harian dan operasional"
+    },
+    "/master_patients/{patientId}": {
+      "schema": { "$ref": "#/entities/MasterPatient" },
+      "description": "Daftar master pasien rutin hemodialisa"
+    },
+    "/master_nurses/{nurseId}": {
+      "schema": { "$ref": "#/entities/MasterNurse" },
+      "description": "Daftar master perawat dan peran dinas"
+    },
+    "/nurse_logbooks/{nurseKey}": {
+      "schema": { "$ref": "#/entities/DialysisSession" },
+      "description": "State logbook mandiri perawat pelaksana (pasien asuhan, checklist, TTV, pengajuan PJ)"
+    },
+    "/verification_registry/{regId}": {
+      "schema": { "$ref": "#/entities/ShiftReport" },
+      "description": "Pusat antrean verifikasi logbook perawat oleh PJ Shift dan Kepala Ruangan"
+    }
+  }
+}
